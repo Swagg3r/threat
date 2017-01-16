@@ -1,0 +1,22 @@
+--- tric_malloc.c	2014-10-23 22:50:03.953266635 +0200
++++ tric_malloc.c.patch	2014-10-23 22:50:37.759930985 +0200
+@@ -10,15 +10,18 @@
+ **
+ ** Comments : This is an example of CWE-131: Incorrect calculation of buffer size,
+ **	see http://cwe.mitre.org/data/definitions/131.html
++**	
++**	Patch version
+ */
+ #include<stdio.h>
+ #include<stdlib.h>
+ #include<assert.h>
++#include<stdint.h>
+ 
+ int
+ main(int argc, char** argv)
+ {
+-    int		len;
++    uint32_t	len;
+     char*	str;
+ 
+     if(argc != 2)

@@ -1,0 +1,31 @@
+--- dns_auth.c	2014-10-23 23:07:21.773195562 +0200
++++ patch	2014-10-23 23:07:59.469859645 +0200
+@@ -13,6 +13,17 @@
+ **	We will use a DNS query to identify a node in the network from being 
+ **	part of a trusted network or not. This is a flaw as we could easily
+ **	craft malicious response.
++**	
++** Patch: The patch there is not so easy. The rule is to never trust user input.
++**	If he needs to access some secure data/location you must at least 
++**	authenticate him beforehand. Note that it could be interessting for the 
++**	user too, to be sure that you are the node he want to deal with. Thus,
++**	at least one way authentication (to authenticate the client) must be 
++**	used by for example authenticate the message. Different solutions 
++**	could be used TLS, HMAC, PGP...
++**	In the following I will assume that people wanting to reach secure.nsa.gov
++**	share a common secret with this program. This is a very simple example
++**	the implementation is let to the reader.
+ */
+ #include<stdio.h>
+ #include<stdlib.h>
+@@ -83,7 +94,9 @@
+ 
+     if(res == TRUSTED_FQDN)
+ 	{
+-	    printf("Welcome to the NSA datacenter\n");
++	    printf("Ok, so you want to reach NSA\'s datacenter.\n");
++	    printf("Note that all you personnal information will be collected.\n");
++	    printf("Ho wait, I must also check that you're really a fedz, insert a coin!\n");
+ 	}
+     else
+ 	{

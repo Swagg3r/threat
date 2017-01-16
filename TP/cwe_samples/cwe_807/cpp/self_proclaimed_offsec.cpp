@@ -1,0 +1,73 @@
+/*
+** Creative Commons Attribution-ShareAlike 3.0 License -
+** This work is licensed under the Creative Commons Attribution-Share Alike
+** 3.0 License. To view a copy of this license,
+** visit http://creativecommons.org/licenses/by-sa/3.0/legalcode;
+** or, (b) send a letter to Creative Commons, 171 2nd Street, Suite 300, San
+** Francisco, California, 94105, USA.
+**
+** Originally created : Mataru
+**
+** Comments : CWE-807: Reliance on Untrusted Inputs in a Security Decision.
+**	http://cwe.mitre.org/data/definitions/807.html
+**	This PoC will be based on different CVE (CVE-2009-1549, CVE-2009-1619,
+**	...) where a user could gain access to higher privilege he has by setting
+**	is_admin = 1 into a cookie, or something like that
+*/
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<stdint.h>
+
+#define	URG_BECOME_ROOT	"admin = 1"
+
+/*
+** Prints an help and abort
+*/
+static void
+_usage(const char* const prog)
+{
+    fprintf(stderr, "Usage: %s <username>\n\n", prog);
+    fprintf(stderr, "username:\t the username we want to log with\n");
+
+    exit(1);
+}
+
+static void
+_handle_login(int argc, char** argv)
+{
+    int8_t	root;
+
+    root = 0;
+
+    // Does someone want to be root ?
+    if(argc > 2)
+	{
+	    if(strcmp(URG_BECOME_ROOT, argv[2]) == 0)
+		{
+		    root	= 1;
+		}
+	}
+
+    if(root)
+	{
+	    printf("Hail to the chef!\n");
+	}
+    else
+	{
+	    printf("you are logged into a common account: %s\n", argv[1]);
+	}
+}
+
+int
+main(int argc, char** argv)
+{
+    if(argc < 2)
+	{
+	    _usage(argv[0]);
+	}
+
+    _handle_login(argc, argv);
+    
+    return(0);
+}

@@ -1,0 +1,135 @@
+/*
+** Creative Commons Attribution-ShareAlike 3.0 License -
+** This work is licensed under the Creative Commons Attribution-Share Alike
+** 3.0 License. To view a copy of this license,
+** visit http://creativecommons.org/licenses/by-sa/3.0/legalcode;
+** or, (b) send a letter to Creative Commons, 171 2nd Street, Suite 300, San
+** Francisco, California, 94105, USA.
+**
+** Originally created : Mataru
+**
+** Comments : CWE-798 - Use of Hard-coded Credentials based on hardcoded
+**	username/password.
+**	See http://cwe.mitre.org/data/definitions/798.html.
+**
+**	Patch: This is not fully a patch of the previous "livebox.c" vulnerability,
+**	due to time constraint. The best idea is to work as close as Linux do
+**	with shadow file. This file store for each user its associated password
+**	hashed with a given algorithm, let say SHA-{256,512}. Before being hashed 
+**	the plain password is padded with a unique salt also stored in shadow file.
+**	Access to this file either read or write should be properly set by only 
+**	legetimate programs.
+**	This a malicious user could not easily recovered password.
+*/
+#include<stdio.h>
+#include<assert.h>
+#include<stdlib.h>
+#include<string.h>
+#include<stdint.h>
+#include<openssl/md5.h>
+
+// This is the begining of a line extracted from /etc/shadow
+// We don't care here how to retrieve this
+static const char*	shadow_dump	= "root$1$MIAOU$e69eefe431884d2c90c301fcc27a4e09$";
+// We will use this variable in order to bypass string parsing, this shoudl not be seen by user 
+static const char*	adm_name	= "root";
+static const char*	adm_salt	= "MIAOU";
+// by knowing this we cannot retrieve the clear password : md5("weakMIAOU")
+static const char*	adm_pwd		= "e69eefe431884d2c90c301fcc27a4e09";
+
+static char*
+_print_sum(unsigned char* md)
+{
+    uint32_t	i;
+    char* buf;
+
+    buf = (char*)malloc(33 * sizeof(char));
+
+    for(i = 0; i < 16; ++i)
+	{
+	    sprintf(buf+i*2, "%02x", md[i]);
+	}
+
+    buf[33] = '\0';
+
+    return(buf);
+}
+
+/*
+** Check both if given username match expected one.
+** Also check if given password once it has been hashed with a very secure
+** algorithm MD5 (don't use this) match adm_pwd
+**
+** :param username: user input username
+** :param password: user input password
+*/ 
+static int8_t
+_check_creds(const char* const username, const char* const password)
+{
+    int8_t		res;
+    int8_t		ret;
+    unsigned char	sec_pwd[16];
+    MD5_CTX		ctx;
+    char*		sec_pwd_hex;
+    size_t		salt_pwd_len;
+    char*		salted_pwd;
+
+    salt_pwd_len = strlen(adm_salt);
+    salt_pwd_len += strlen(password);
+
+    salted_pwd = (char*)malloc((salt_pwd_len + 1) * sizeof(char));
+    assert(salted_pwd != NULL);
+    sprintf(salted_pwd, "%s%s", password, adm_salt);
+
+    // Compute the MD5 of user input password either binary and digest one
+    MD5_Init(&ctx);
+    MD5_Update(&ctx, salted_pwd, salt_pwd_len);
+    MD5_Final(sec_pwd, &ctx);
+    sec_pwd_hex = _print_sum(sec_pwd);
+
+    // check of the md5(password) == adm_pwd & username == adm_name
+    res = memcmp(adm_pwd, sec_pwd_hex, 32);
+
+    if(strcmp(adm_name, username) == 0)
+	{
+	    ret = 1;
+	}
+    else
+	{
+	    ret = 0;
+	}
+
+    if(res == 0)
+	{
+	    return(1 & ret);
+	}
+    else
+	{
+	    return(0);
+	}
+}
+
+int
+main(int argc, char** argv)
+{
+    int8_t	res;
+
+    if(argc != 3)
+	{
+	    fprintf(stderr, "Usage: %s <username> <password>\n", argv[0]);
+	    exit(1);
+	}
+
+    res = _check_creds(argv[1], argv[2]);
+
+    if(res)
+	{
+	    printf("Access granted\n");
+	}
+    else
+	{
+	    printf("Access denied\n");
+	}
+
+    return(0);
+}

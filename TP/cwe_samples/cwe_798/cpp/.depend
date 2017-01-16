@@ -1,0 +1,1 @@
+pyftpd_auth_db.o: pyftpd_auth_db.cpp

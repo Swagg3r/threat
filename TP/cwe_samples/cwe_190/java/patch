@@ -1,0 +1,25 @@
+--- bof_loop.java	2014-12-04 23:51:42.419272916 +0100
++++ patch.java	2014-12-05 00:05:57.735967307 +0100
+@@ -11,7 +11,7 @@
+ ** Comments : CWE 190 - Integer Overflow or Wraparound applied in order to 
+ **	lead to undefined loop.
+ */
+-public class bof_loop
++public class patch
+ {
+     public static void main(String[] argv)
+     {
+@@ -31,6 +31,13 @@
+ 	// string (user input) to int
+ 	iter_c = Integer.parseInt(argv[0]);
+ 
++	int MAX_SHORT = 32767;
++	if(iter_c > MAX_SHORT)
++	{
++	    System.err.println("You ask for too much iteration");
++	    System.exit(2);
++	}
++
+ 	/*
+ 	** Loop until our short i equals the value given
+ 	** As iter_c belongs to [-2**31; (2**31) -1]

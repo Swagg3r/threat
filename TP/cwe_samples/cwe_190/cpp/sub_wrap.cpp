@@ -1,0 +1,51 @@
+/*
+** Creative Commons Attribution-ShareAlike 3.0 License -
+** This work is licensed under the Creative Commons Attribution-Share Alike
+** 3.0 License. To view a copy of this license,
+** visit http://creativecommons.org/licenses/by-sa/3.0/legalcode;
+** or, (b) send a letter to Creative Commons, 171 2nd Street, Suite 300, San
+** Francisco, California, 94105, USA.
+**
+** Originally created : Mataru
+**
+** Comments : CWE 190 - Integer Overflow or Wraparound applied on a
+**	wrap during a substraction
+**	cwe: http://cwe.mitre.org/data/definitions/190.html
+*/
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdint.h>
+
+static uint32_t
+_substraction(uint32_t a, uint32_t b)
+{
+    uint32_t	diff;
+
+    diff = a - b;
+
+    return(diff);
+} 
+
+int
+main(int argc, char** argv)
+{
+    uint32_t	a;
+    uint32_t	b;
+    uint32_t	res;
+
+    if(argc != 3)
+	{
+	    fprintf(stderr, "Usage: %s <nb_0> <nb_1>\n", argv[0]);
+	    exit(1);
+	}
+
+    // unsigned operation could lead to unepected behavior
+    a = atoi(argv[1]);
+    b = atoi(argv[2]);
+
+    res = _substraction(a, b);
+
+    printf("%u - %u = %u\n", a, b, res);
+
+    return(0);
+}

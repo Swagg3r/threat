@@ -1,0 +1,24 @@
+#!/bin/sh
+# We check on the Internet if we can find some credentials for the
+# device under tests
+
+if [ ! -f google.class ]; then
+   echo "google.class does not exists compil it!" 
+   exit 1
+fi
+
+# Retrieve the information (username,password) on "the Internet" and
+#then format it as expected on scada.class. You known that the asnwer
+#will be formated like "username:password" and that the scada.class
+#expect the format "username password". So we do that with two
+#command, awk for retrieve the relevant information information  and
+#sed for changing ":" to " ".
+# Note that it could be done in the same command
+creds_g=$(java google credential | awk '{ print $7 }'  | sed 's/:/ /g')
+
+if [ ! -f scada.class ]; then
+   echo "scada.class does not exists compil it!"
+   	exit 1
+fi
+
+java scada $creds_g

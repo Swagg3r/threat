@@ -1,0 +1,24 @@
+--- iof_openssh.c	2014-10-23 23:00:26.459890671 +0200
++++ patch	2014-10-23 23:01:22.963220134 +0200
+@@ -21,6 +21,8 @@
+ #include<stdint.h>
+ #include<assert.h>
+ 
++#define	MAX_ALLOWED_RESP	100
++
+ int
+ main(int argc, char** argv)
+ {
+@@ -40,6 +42,12 @@
+     n_resp = atoi(argv[1]);
+     printf("You ask for %u responses\n", n_resp);
+ 
++    if(n_resp > MAX_ALLOWED_RESP)
++	{
++	    fprintf(stderr, "Too many response set!\n");
++	    exit(1);
++	}
++
+     if(n_resp > 0)
+ 	{
+ 	    // Integer overflow here if n_resp * sizeof(char*) > 2^32 - 1

@@ -1,0 +1,67 @@
+/*
+** Creative Commons Attribution-ShareAlike 3.0 License -
+** This work is licensed under the Creative Commons Attribution-Share Alike
+** 3.0 License. To view a copy of this license,
+** visit http://creativecommons.org/licenses/by-sa/3.0/legalcode;
+** or, (b) send a letter to Creative Commons, 171 2nd Street, Suite 300, San
+** Francisco, California, 94105, USA.
+**
+** Originally created : Mataru
+**
+** Comments : CWE-131: Incorrect Calculation of Buffer Size.
+**	See: http://cwe.mitre.org/data/definitions/131.html
+**	There the user need to allocate N structure of size M but just forgot
+**	to include the size of each element in the allocation
+*/
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<assert.h>
+
+/*
+** We alloc 17 so the malloc (on 32 bit linux system) will probably return a area
+** of 24 bytes. 
+*/
+#define	SEQ_LEN		17
+#define	FILENAME_LEN	32
+
+void
+_fill_seq(char** argv)
+{
+    int		i;
+    int*	seq; // This is a sequence that hold SEQ_LEN intereger
+    char*	file; 
+
+    seq = (int*)malloc(SEQ_LEN);
+    assert(seq != NULL);
+
+    file = (char*)malloc(FILENAME_LEN * sizeof(char));
+    assert(file != NULL);
+
+    // We expect to promt momy 
+    strcpy(file, "momy");
+
+    for(i = 0; i < SEQ_LEN; ++i)
+	{
+	    seq[i] = atoi(argv[i]);
+	}
+
+    printf("Hello %s!\n", file);
+
+    memset(seq, 0,SEQ_LEN);
+    memset(file, 0, FILENAME_LEN);
+}
+
+int 
+main(int argc, char** argv)
+{
+    if(argc != SEQ_LEN + 1)
+    	{
+    	    fprintf(stderr, "Usage: %s <seq>... (17 times)\n", argv[0]);
+    	    exit(1);
+    	}
+
+    _fill_seq(&argv[1]);
+
+    return(0);
+}

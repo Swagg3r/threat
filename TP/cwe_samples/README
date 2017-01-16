@@ -1,0 +1,12 @@
+	Common Weakness Enumeration PoC
+
+Covered CWE:
+	- 120 Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')
+	- 131 Incorrect Calculation of Buffer Size
+	- 134 Uncontrolled Format String
+	- 190 Integer Overflow or Wraparound
+	- 798 Use of Hard-coded Credentials
+	- 807 Reliance on Untrusted Inputs in a Security Decision
+
+Each of directory include a PoC of the weakness and some example to
+mitigate them.

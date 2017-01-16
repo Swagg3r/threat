@@ -1,0 +1,39 @@
+11,13c11,12
+< ** Comments : CWE-120: Buffer Copy without Checking Size of 
+< **	Input ('Classic Buffer Overflow'). PoC Based on non checking
+< **	of length of string while copying string
+---
+> ** Comments: CWE-120: Buffer Copy without Checking Size of 
+> **	Input ('Classic Buffer Overflow')
+14a14,15
+> **
+> ** Patch: Based on length checking
+21a23,24
+> #define BUF_SIZE	16
+> 
+28,31c31,32
+<     fprintf(stderr, "Usage: %s <password>\n\n", sw);
+<     fprintf(stderr, "password:\tenter you password\n");
+<     
+<     exit(1);
+---
+>     printf("Usage: %s <password>\n", sw);
+>     exit(0);
+41,42c42,44
+<     char	buf[16];
+<     
+---
+>     char	buf[BUF_SIZE];
+>     size_t	len;
+> 
+44c46,53
+<     // Withint entering something like chocolat or miaou we are able to set res none null
+---
+>     len = strlen(password);    
+> 
+>     //just check the length of input data, also strncpy could be used in addition of this
+>     if(len >= BUF_SIZE)
+>         {   
+> 	    printf("Password to huge\n");
+> 	    exit(0);
+> 	}

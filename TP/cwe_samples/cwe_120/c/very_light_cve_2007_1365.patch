@@ -1,0 +1,29 @@
+13,15c13,14
+< **	cwe: http://cwe.mitre.org/data/definitions/120.html
+< **	cve: http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2007-1365
+< **	Vulnerable kernel: OpenBSD 3.9 and 4.0
+---
+> **
+> ** Patch: Assert that we don't try to copy more than allocated space
+22a22,23
+> #define BUF_SIZE 100
+> 
+25c26
+<     char	buf[100];
+---
+>     char	buf[BUF_SIZE];
+44a46
+>     size_t	len;
+49,50c51,59
+<     // unchecked copy
+<     // There we need to write the addresse of "_got_root" into m->ext_free
+---
+>     // Retrieve the len of the data from user input
+>     len = strlen(data);
+> 
+>     // check if the buff is large enough (including sting ending char \0)
+>     if(len >= BUF_SIZE)
+> 	{
+> 	    printf("buffer to huge\n");
+> 	    exit(0);
+> 	}

@@ -1,0 +1,32 @@
+--- sub_wrap.cpp	2014-10-24 00:21:57.716222374 +0200
++++ patch	2014-10-24 00:23:52.352881190 +0200
+@@ -11,6 +11,8 @@
+ ** Comments : CWE 190 - Integer Overflow or Wraparound applied on a
+ **	wrap during a substraction
+ **	cwe: http://cwe.mitre.org/data/definitions/190.html
++**
++** Patch: based on precondition test
+ */
+ #include<stdio.h>
+ #include<stdlib.h>
+@@ -20,6 +22,12 @@
+ _substraction(uint32_t a, uint32_t b)
+ {
+     uint32_t	diff;
++    // if we still need to work on unsigned int, add some check before do something
++    if(a < b)
++	{
++	    fprintf(stderr, "The left operande is smaller the right one\n");
++	    exit(2);
++	}
+ 
+     diff = a - b;
+ 
+@@ -39,7 +47,6 @@
+ 	    exit(1);
+ 	}
+ 
+-    // unsigned operation could lead to unepected behavior
+     a = atoi(argv[1]);
+     b = atoi(argv[2]);
+ 

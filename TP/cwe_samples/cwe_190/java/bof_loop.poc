@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ ! -f bof_loop.class ]; then
+  echo "bof_loop.class does not exists compil it"
+fi
+
+# By asking at least 2**15 iteration we cause an interger wraparound
+java bof_loop 32768

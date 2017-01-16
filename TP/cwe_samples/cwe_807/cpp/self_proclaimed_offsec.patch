@@ -1,0 +1,22 @@
+--- self_proclaimed_offsec.cpp	2014-10-23 23:08:51.749856067 +0200
++++ patch	2014-10-23 23:08:38.219856994 +0200
+@@ -13,6 +13,10 @@
+ **	This PoC will be based on different CVE (CVE-2009-1549, CVE-2009-1619,
+ **	...) where a user could gain access to higher privilege he has by setting
+ **	is_admin = 1 into a cookie, or something like that
++**
++** Patch: Once again, like the C PoC we must not trust the user and made a Proof
++**	of Knownledge of secret (TLS,HMAC...). The reader must choose his side 
++**	and write the fix regarding its needs and constraints.
+ */
+ #include<stdio.h>
+ #include<stdlib.h>
+@@ -51,7 +55,7 @@
+ 
+     if(root)
+ 	{
+-	    printf("Hail to the chef!\n");
++	    printf("So you want to be root, prove it!\n");
+ 	}
+     else
+ 	{

@@ -1,0 +1,22 @@
+--- missing_elt_size.cpp	2014-10-23 22:51:53.046592497 +0200
++++ missing_elt_size.cpp.patch	2014-10-23 22:52:38.189922735 +0200
+@@ -8,8 +8,8 @@
+ **
+ ** Originally created : Mataru
+ **
+-** Comments : CWE-131: Incorrect Calculation of Buffer Size.
+-**	See: http://cwe.mitre.org/data/definitions/131.html
++** Comments : CWE-131: Incorrect Calculation of Buffer Size
++**	See http://cwe.mitre.org/data/definitions/131.html
+ **	There the user need to allocate N structure of size M but just forgot
+ **	to include the size of each element in the allocation
+ */
+@@ -32,7 +32,7 @@
+     int*	seq; // This is a sequence that hold SEQ_LEN intereger
+     char*	file; 
+ 
+-    seq = (int*)malloc(SEQ_LEN);
++    seq = (int*)malloc(SEQ_LEN * sizeof(int));
+     assert(seq != NULL);
+ 
+     file = (char*)malloc(FILENAME_LEN * sizeof(char));

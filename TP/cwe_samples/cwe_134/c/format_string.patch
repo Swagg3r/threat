@@ -1,0 +1,11 @@
+15a16,17
+> **
+> ** Patch: Based on manpage of *printf*
+16a19
+> 
+41,42c44,45
+<     // There a user is able to read/write the stack, for example the canary "miaou"
+<     printf(argv[1]);
+---
+>     // never ever trust user input, trick is so simple!
+>     printf("%s", argv[1]);

@@ -1,0 +1,3 @@
+screenshot : xwd -root -display :0 -out s.xwd
+scp de la cible vers le courant : scp crypto@192.168.142.42:/snap/s.xwd .
+
